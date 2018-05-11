@@ -5,8 +5,9 @@ import * as constants from '../constants';
 
 export function logout() {
   return (dispatch) => {
-    localStorage.removeItem('logs-to-cloudwatch:apiToken');
-    sessionStorage.removeItem('logs-to-cloudwatch:apiToken');
+    const key = window.config.EXTENSION_NAME + ':apiToken';
+    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
 
     window.location = window.config.AUTH0_MANAGE_URL;
 
@@ -18,7 +19,8 @@ export function logout() {
 
 export function loadCredentials() {
   return (dispatch) => {
-    const apiToken = sessionStorage.getItem('logs-to-cloudwatch:apiToken');
+    const key = window.config.EXTENSION_NAME + ':apiToken';
+    const apiToken = sessionStorage.getItem(key);
     if (apiToken) {
       const decodedToken = decodeToken(apiToken);
 
@@ -27,7 +29,7 @@ export function loadCredentials() {
       }
 
       axios.defaults.headers.common.Authorization = `Bearer ${apiToken}`;
-      sessionStorage.setItem('logs-to-cloudwatch:apiToken', apiToken);
+      sessionStorage.setItem(key, apiToken);
 
       dispatch({
         type: constants.RECIEVED_TOKEN,

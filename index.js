@@ -1,6 +1,5 @@
 const path = require('path');
 const nconf = require('nconf');
-const logger = require('./server/lib/logger');
 
 // Initialize configuration.
 nconf
@@ -20,8 +19,8 @@ const app = require('./server')((key) => nconf.get(key), null);
 const port = nconf.get('PORT');
 app.listen(port, (error) => {
   if (error) {
-    logger.error(error);
+    console.error(error);
   } else {
-    logger.info(`Listening on http://localhost:${port}.`);
+    console.info(`Listening on http://localhost:${port}.`);
   }
 });
