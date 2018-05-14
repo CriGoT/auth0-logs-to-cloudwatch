@@ -54,7 +54,10 @@ module.exports = {
       {
         test: /\.jsx?$/,
         loader: 'babel',
-        exclude: path.join(__dirname, '../../node_modules/')
+        exclude: function (modulePath) {
+          return /node_modules/.test(modulePath) &&
+            !/auth0-log-extensions-ui/.test(modulePath);
+        }
       },
       {
         test: /\.(png|ttf|svg|jpg|gif)/,
