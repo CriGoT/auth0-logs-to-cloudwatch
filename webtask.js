@@ -1,11 +1,10 @@
 const tools = require('auth0-extension-express-tools');
 
 const expressApp = require('./server');
-const config = require('./server/lib/config');
-const logger = require('./server/lib/logger');
+const config = require('auth0-extension-tools').config;
 
 const createServer = tools.createServer((config, storage) => {
-  logger.info('Starting Logs to Cloudwatch extension - Version:', process.env.CLIENT_VERSION);
+  console.info('Starting Logs to Cloudwatch extension - Version:', process.env.CLIENT_VERSION);
   return expressApp(config, storage);
 });
 
