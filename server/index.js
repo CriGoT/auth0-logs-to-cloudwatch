@@ -12,6 +12,7 @@ const hooks = require('./routes/hooks');
 const logger = require('./lib/logger');
 const config = require('./lib/config');
 const processLogs = require('./lib/processLogs');
+const webMiddleware = require('./lib/webMiddleware');
 
 module.exports = (configProvider, storageProvider) => {
   config.setProvider(configProvider);
@@ -39,16 +40,17 @@ module.exports = (configProvider, storageProvider) => {
   app.use(prepareBody(bodyParser.urlencoded({ extended: false })));
 
   // Configure routes.
-  app.use(expressTools.routes.dashboardAdmins({
-    secret: config('EXTENSION_SECRET'),
-    audience: 'urn:logs-to-cloudwatch',
-    rta: config('AUTH0_RTA').replace('https://', ''),
-    domain: config('AUTH0_DOMAIN'),
-    baseUrl: config('PUBLIC_WT_URL') || config('WT_URL'),
-    clientName: 'Logs to Cloudwatch',
-    urlPrefix: '',
-    sessionStorageKey: 'logs-to-cloudwatch:apiToken'
-  }));
+  app.use(webMiddleware(() => 
+      expressTools.routes.dashboardAdmins({
+        secret: config('EXTENSION_SECRET'),
+        audience: 'urn:logs-to-cloudwatch',
+        rta: config('AUTH0_RTA').replace('https://', ''),
+        domain: config('AUTH0_DOMAIN'),
+        baseUrl: config('PUBLIC_WT_URL') || config('WT_URL'),
+        clientName: 'Logs to Cloudwatch',
+        urlPrefix: '',
+        sessionStorageKey: 'logs-to-cloudwatch:apiToken'
+      })));
   app.use('/meta', meta());
   app.use('/.extensions', hooks());
 
